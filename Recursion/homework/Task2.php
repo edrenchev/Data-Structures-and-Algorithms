@@ -7,7 +7,7 @@ class Task2 {
 	public static $n = 3;
 	public static $k = 2;
 
-	public static function Main() {
+	public static function main() {
 		self::variate(0);
 	}
 
