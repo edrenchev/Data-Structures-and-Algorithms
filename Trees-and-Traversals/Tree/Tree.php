@@ -126,6 +126,34 @@ class Tree {
 		$this->TraverseDFSByRoot($this->getRoot(), '');
 	}
 
+	public function TraverseBFS() {
+
+		$queue = new SplQueue();
+		$queue->enqueue($this->getRoot());
+		while ($queue->count() > 0) {
+			$currentNode = $queue->dequeue();
+			print ($currentNode->getValue() . ' ');
+			for ($i=0; $i<$currentNode->getChildrenCount(); $i++) {
+				$childNode = $currentNode->getChild($i);
+				$queue->enqueue($childNode);
+			}
+		}
+
+	}
+
+	public function TraverseDFSWithStack() {
+		$stack = new SplStack();
+		$stack->push($this->getRoot());
+		while ($stack->count() > 0) {
+			$currentNode = $stack->pop();
+			print ($currentNode->getValue() . ' ');
+			for ($i=0; $i<$currentNode->getChildrenCount(); $i++) {
+				$childNode = $currentNode->getChild($i);
+				$stack->push($childNode);
+			}
+		}
+	}
+
 }
 
 $tree =
@@ -146,3 +174,13 @@ $tree =
 
 print ("Depth-First Search (DFS) traversal (recursive):\r\n");
 $tree->TraverseDFS();
+
+print ("\r\n");
+
+print ("Breadth-First Search (BFS) traversal (with queue):\r\n");
+$tree->TraverseBFS();
+
+print ("\r\n");
+
+print ("Depth-First Search (DFS) traversal (with stack):\r\n");
+$tree->TraverseDFSWithStack();
