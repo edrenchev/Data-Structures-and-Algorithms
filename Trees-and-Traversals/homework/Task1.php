@@ -109,11 +109,10 @@ class Tree {
 
 	public function getAllLeafNodes(TreeNode $node) {
 
-		if($node->getChildrenCount() == 0) {
-			print (" ".$node->getValue());
+		if ($node->getChildrenCount() == 0) {
+			print (" " . $node->getValue());
 		}
 
-		//$queue = new SplQueue();
 		for ($i = 0; $i < $node->getChildrenCount(); $i++) {
 			$currentNode = $node->getChild($i);
 			$this->getAllLeafNodes($currentNode);
@@ -122,11 +121,10 @@ class Tree {
 
 	public function getAllMiddleNodes(TreeNode $node) {
 
-		if($node->getChildrenCount() > 0 && $node->getHasParent() === true) {
-			print (" ".$node->getValue());
+		if ($node->getChildrenCount() > 0 && $node->getHasParent() === true) {
+			print (" " . $node->getValue());
 		}
 
-		//$queue = new SplQueue();
 		for ($i = 0; $i < $node->getChildrenCount(); $i++) {
 			$currentNode = $node->getChild($i);
 			$this->getAllMiddleNodes($currentNode);
@@ -135,19 +133,65 @@ class Tree {
 
 	public function getLongestPath(TreeNode $node) {
 
-		if($node->getChildrenCount() == 0) {
+		if ($node->getChildrenCount() == 0) {
 			return 0;
 		}
 
 		$maxPath = 0;
 
-		//$queue = new SplQueue();
 		for ($i = 0; $i < $node->getChildrenCount(); $i++) {
 			$currentNode = $node->getChild($i);
-			$maxPath = max($maxPath, $this->getLongestPath($currentNode));
+			$maxPath = 1 + $this->getLongestPath($currentNode);
 		}
 
-		return $maxPath + 1;
+		return $maxPath;
+	}
+
+	public function getAllPathsWithSumS(TreeNode $node, $sum, $path = '') {
+
+		if ($node->getValue() > $sum) {
+			return;
+		} else {
+			$path .= " " . $node->getValue();
+			$sum -= $node->getValue();
+			if ($sum == 0) print ($path . "\r\n");
+			for ($i = 0; $i < $node->getChildrenCount(); $i++) {
+				$this->getAllPathsWithSumS($node->getChild($i), $sum, $path);
+			}
+		}
+
+	}
+
+	public function getAllSubtreesWithSumS(TreeNode $node, $sum) {
+
+		if ($node->getChildrenCount() > 0 && $node->getHasParent() === true) {
+			$tmpNode = $this->getTreeSum($node);
+			if ($sum == $tmpNode[0]) {
+				print ($tmpNode[1] . "\r\n");
+			}
+		}
+
+		for ($i = 0; $i < $node->getChildrenCount(); $i++) {
+			$currentNode = $node->getChild($i);
+			$this->getAllSubtreesWithSumS($currentNode, $sum);
+		}
+
+	}
+
+	public function getTreeSum(TreeNode $node, $sum = 0, $nodes = '') {
+
+		$sum += $node->getValue();
+		$nodes .= $node->getValue() . ' ';
+
+		for ($i = 0; $i < $node->getChildrenCount(); $i++) {
+			$currentNode = $node->getChild($i);
+			$tmpTree = $this->getTreeSum($currentNode, $sum);
+			$sum += $tmpTree[0];
+			$nodes .= $tmpTree[1] . ' ';
+		}
+
+		return [$sum, $nodes];
+
 	}
 
 }
@@ -181,5 +225,14 @@ print ("\r\n");
 print ("the longest path in the tree ");
 print ($tree->getLongestPath($tree->getRoot()));
 print ("\r\n");
+
+print ("all paths in the tree with given sum `S` of their nodes ");
+$tree->getAllPathsWithSumS($tree->getRoot(), 8);
+print ("\r\n");
+
+print ("all subtrees with given sum `S` of their nodes ");
+$tree->getAllSubtreesWithSumS($tree->getRoot(), 6);
+print ("\r\n");
+
 
 
